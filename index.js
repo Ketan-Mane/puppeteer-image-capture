@@ -25,7 +25,7 @@ async function captureWebsiteViewport(
     await page.goto(url, { waitUntil: "networkidle0", timeout: 0 });
 
     // Capture only the viewport screenshot
-    await page.screenshot({ path: outputPath, fullPage: false });
+    await page.screenshot({ path: outputPath, fullPage: true });
 
     console.log(`Viewport screenshot saved to ${outputPath}`);
 
