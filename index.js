@@ -18,7 +18,10 @@ async function captureWebsiteViewport(
     });
     const page = await browser.newPage();
 
+    await page.setViewport({ width: 1400, height: 800 });
+
     // Navigate to the URL
+    console.log("Navigating to : ", url);
     await page.goto(url, { waitUntil: "networkidle0", timeout: 0 });
 
     // Capture only the viewport screenshot
@@ -48,6 +51,18 @@ app.get("/", async (req, res) => {
 
 app.get("/image", async (req, res) => {
   return res.sendFile(dirname(import.meta.filename) + "/example_viewport.png");
+});
+
+app.get("/generate-thumbnail", async (req, res) => {
+  const { url, filename } = req.query;
+  await captureWebsiteViewport(url, `${filename}.png`)
+    .then((res) => {
+      console.log("Saved : ", filename);
+    })
+    .catch((error) => {
+      console.log("Error at image capture : ", error);
+    });
+  return res.sendFile(dirname(import.meta.filename) + `/${filename}.png`);
 });
 
 app.listen(8000, () => {
