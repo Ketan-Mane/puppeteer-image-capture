@@ -1,6 +1,7 @@
 import express from "express";
 import puppeteer from "puppeteer";
 import { executablePath } from "puppeteer";
+import path, { dirname } from "path";
 
 const app = express();
 
@@ -18,7 +19,7 @@ async function captureWebsiteViewport(
     const page = await browser.newPage();
 
     // Navigate to the URL
-    await page.goto(url, { waitUntil: "networkidle0" });
+    await page.goto(url, { waitUntil: "networkidle0", timeout: 0 });
 
     // Capture only the viewport screenshot
     await page.screenshot({ path: outputPath, fullPage: false });
@@ -33,17 +34,20 @@ async function captureWebsiteViewport(
   }
 }
 
+captureWebsiteViewport("https://thebreezycompany.co", "example_viewport.png")
+  .then((res) => {
+    console.log("Saved");
+  })
+  .catch((error) => {
+    console.log("Error at image capture : ", error);
+  });
+
 app.get("/", async (req, res) => {
-  const urls = [
-    "https://thebreezycompany.co",
-    "https://thebreezycompany.co",
-    "https://thebreezycompany.co",
-  ];
-  for (let i = 0; i < urls.length; i++) {
-    const url = urls[i];
-    await captureWebsiteViewport(url, `output_${i}.png`);
-  }
   return res.send("Hello");
+});
+
+app.get("/image", async (req, res) => {
+  return res.sendFile(dirname(import.meta.filename) + "/example_viewport.png");
 });
 
 app.listen(8000, () => {
