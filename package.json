@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": ""
+    "preinstall": "cross-env PUPPETEER_CACHE_DIR=./.cache/puppeteer npx puppeteer browsers install chrome",
+    "start": "cross-env PUPPETEER_CACHE_DIR=./.cache/puppeteer node index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "module",
   "dependencies": {
+    "cross-env": "^7.0.3",
+    "express": "^5.1.0",
     "puppeteer": "^24.9.0",
     "puppeteer-core": "^24.9.0"
   }
